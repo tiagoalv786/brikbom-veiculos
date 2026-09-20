@@ -211,6 +211,90 @@
       window.location.href = "admin.html";
     }
 
+    
+    async function salvarVeiculo() {
+
+  const mensagem = document.getElementById("mensagem");
+  const modelo = document.getElementById("modelo").value.trim();
+  const ano = Number(document.getElementById("ano").value);
+  const km = Number(document.getElementById("km").value);
+  const cambio = document.getElementById("cambio").value;
+  const preco = Number(document.getElementById("preco").value);
+  const descricao = document.getElementById("descricao").value.trim();
+  const whatsapp = document.getElementById("whatsapp").value.trim();
+  const arquivos = document.getElementById("fotos").files;
+
+  if (!modelo || !ano || !km || !cambio || !preco || arquivos.length === 0) {
+    mensagem.textContent = "❌ Preencha os campos obrigatórios e escolha pelo menos uma foto.";
+    return;
+  }
+
+  mensagem.textContent = "⏳ Salvando veículo e enviando fotos...";
+
+  const fotos = [];
+
+  for (let i = 0; i < arquivos.length; i++) {
+
+    const arquivo = arquivos[i];
+
+    const nomeArquivo =
+      Date.now() + "_" +
+      Math.random().toString(36).substring(2) + "_" +
+      arquivo.name.replace(/\s+/g, "-");
+
+    const caminho = "veiculos/" + nomeArquivo;
+
+    const { error: uploadError } =
+      await supabaseClient.storage
+        .from("carros")
+        .upload(caminho, arquivo);
+
+    if (uploadError) {
+      mensagem.textContent = "❌ Erro ao enviar a foto: " + uploadError.message;
+      return;
+    }
+
+    const { data: urlData } =
+      supabaseClient.storage
+        .from("carros")
+        .getPublicUrl(caminho);
+
+    fotos.push(urlData.publicUrl);
+  }
+
+  const { error } =
+    await supabaseClient
+      .from("veiculos")
+      .insert({
+        modelo: modelo,
+        ano: ano,
+        km: km,
+        cambio: cambio,
+        preco: preco,
+        descricao: descricao,
+        foto_principal: fotos[0],
+        fotos: JSON.stringify(fotos),
+        whatsapp: whatsapp,
+        disponivel: true
+      });
+
+  if (error) {
+    mensagem.textContent = "❌ Erro ao cadastrar: " + error.message;
+    return;
+  }
+
+  mensagem.textContent = "✅ Veículo cadastrado com sucesso!";
+
+  document.getElementById("modelo").value = "";
+  document.getElementById("ano").value = "";
+  document.getElementById("km").value = "";
+  document.getElementById("cambio").value = "";
+  document.getElementById("preco").value = "";
+  document.getElementById("descricao").value = "";
+  document.getElementById("fotos").value = "";
+
+  }
+    
     verificarLogin();
 
   </script>
