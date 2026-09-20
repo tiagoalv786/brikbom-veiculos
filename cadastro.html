@@ -262,28 +262,33 @@
     fotos.push(urlData.publicUrl);
   }
 
-  const { error } =
-    await supabaseClient
-      .from("veiculos")
-      .insert({
-        modelo: modelo,
-        ano: ano,
-        km: km,
-        cambio: cambio,
-        preco: preco,
-        descricao: descricao,
-        foto_principal: fotos[0],
-        fotos: JSON.stringify(fotos),
-        whatsapp: whatsapp,
-        disponivel: true
-      });
+ mensagem.textContent = "📦 Enviando dados do veículo para o banco...";
 
-  if (error) {
-    mensagem.textContent = "❌ Erro ao cadastrar: " + error.message;
-    return;
-  }
+const { data: veiculoSalvo, error: erroBanco } =
+  await supabaseClient
+    .from("veiculos")
+    .insert({
+      modelo: modelo,
+      ano: ano,
+      km: km,
+      cambio: cambio,
+      preco: preco,
+      descricao: descricao,
+      foto_principal: fotos[0],
+      fotos: JSON.stringify(fotos),
+      whatsapp: whatsapp,
+      disponivel: true
+    })
+    .select();
 
-  mensagem.textContent = "✅ Veículo cadastrado com sucesso!";
+if (erroBanco) {
+  console.error("ERRO SUPABASE:", erroBanco);
+  mensagem.textContent = "❌ ERRO NO BANCO: " + erroBanco.message;
+  return;
+}
+
+console.log("VEÍCULO SALVO:", veiculoSalvo);
+mensagem.textContent = "✅ Veículo cadastrado com sucesso!";
 
   document.getElementById("modelo").value = "";
   document.getElementById("ano").value = "";
