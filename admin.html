@@ -4,13 +4,133 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Painel Brik Bom</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 400px;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.4);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      margin-bottom: 18px;
+      border: 1px solid #ccc;
+      border-radius: 7px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: #25D366;
+      color: white;
+      border: 0;
+      border-radius: 7px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1ebe5d;
+    }
+
+    #mensagem {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
 </head>
 
 <body>
 
-  <h1>Painel Brik Bom Veículos</h1>
+  <div class="login-box">
 
-  <p>Login e cadastro de veículos serão configurados aqui.</p>
+    <h1>🚗 Brik Bom</h1>
+
+    <label for="email">E-mail</label>
+    <input type="email" id="email" placeholder="Digite seu e-mail">
+
+    <label for="senha">Senha</label>
+    <input type="password" id="senha" placeholder="Digite sua senha">
+
+    <button onclick="login()">Entrar</button>
+
+    <div id="mensagem"></div>
+
+  </div>
+
+  <script>
+
+    const SUPABASE_URL = "https://rkpkmtmsjmrjoyaxtlkd.supabase.co";
+const SUPABASE_KEY = "sb_publishable_6hbcaoW8PjXW1ExL6mB3MQ_hPho6Mi5";
+
+    const supabaseClient = supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+    async function login() {
+
+      const email = document.getElementById("email").value;
+      const senha = document.getElementById("senha").value;
+      const mensagem = document.getElementById("mensagem");
+
+      mensagem.textContent = "Entrando...";
+
+      const { data, error } =
+        await supabaseClient.auth.signInWithPassword({
+          email: email,
+          password: senha
+        });
+
+      if (error) {
+        mensagem.textContent = "❌ E-mail ou senha incorretos.";
+        return;
+      }
+
+      mensagem.textContent = "✅ Login realizado!";
+
+      setTimeout(() => {
+        window.location.href = "cadastro.html";
+      }, 800);
+    }
+
+  </script>
 
 </body>
 </html>
