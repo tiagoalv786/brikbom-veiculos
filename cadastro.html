@@ -1,1 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Veículos | Brik Bom</title>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f3f3f3;
+      color: #222;
+    }
+
+    header {
+      background: #111;
+      color: white;
+      padding: 18px 6%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      color: #FFD400;
+      margin: 0;
+    }
+
+    .btn-sair {
+      background: #e31b23;
+      color: white;
+      border: 0;
+      padding: 10px 18px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .painel {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,.08);
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .campo {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ccc;
+      border-radius: 7px;
+      font-size: 16px;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    input[type="file"] {
+      padding: 10px;
+      background: #fafafa;
+    }
+
+    .btn-salvar {
+      width: 100%;
+      padding: 15px;
+      background: #25D366;
+      color: white;
+      border: 0;
+      border-radius: 7px;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn-salvar:hover {
+      background: #1ebe5d;
+    }
+
+    #mensagem {
+      margin-top: 18px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>🚗 Brik Bom</h1>
+    <button class="btn-sair" onclick="sair()">Sair</button>
+  </header>
+
+  <main>
+
+    <div class="painel">
+
+      <h2>Cadastrar veículo</h2>
+
+      <div class="campo">
+        <label for="modelo">Modelo</label>
+        <input type="text" id="modelo" placeholder="Ex.: Volkswagen Nivus GTS">
+      </div>
+
+      <div class="campo">
+        <label for="ano">Ano</label>
+        <input type="number" id="ano" placeholder="Ex.: 2026">
+      </div>
+
+      <div class="campo">
+        <label for="km">Quilometragem</label>
+        <input type="number" id="km" placeholder="Ex.: 10000">
+      </div>
+
+      <div class="campo">
+        <label for="cambio">Câmbio</label>
+        <select id="cambio">
+          <option value="">Selecione</option>
+          <option value="Automático">Automático</option>
+          <option value="Manual">Manual</option>
+          <option value="Automatizado">Automatizado</option>
+          <option value="CVT">CVT</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="preco">Preço</label>
+        <input type="number" id="preco" placeholder="Ex.: 167900">
+      </div>
+
+      <div class="campo">
+        <label for="descricao">Descrição</label>
+        <textarea id="descricao" placeholder="Informações do veículo"></textarea>
+      </div>
+
+      <div class="campo">
+        <label for="whatsapp">WhatsApp para este veículo</label>
+        <input type="text" id="whatsapp" value="5545998011079">
+      </div>
+
+      <div class="campo">
+        <label for="fotos">Fotos do veículo</label>
+        <input type="file" id="fotos" accept="image/*" multiple>
+      </div>
+
+      <button class="btn-salvar" onclick="salvarVeiculo()">
+        💾 Salvar veículo
+      </button>
+
+      <div id="mensagem"></div>
+
+    </div>
+
+  </main>
+
+  <script>
+
+    const SUPABASE_URL = "https://rkpkmtmsjmrjoyaxtlkd.supabase.co";
+    const SUPABASE_KEY = "COLE_AQUI_SUA_PUBLISHABLE_KEY";
+
+    const supabaseClient = supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+    async function verificarLogin() {
+
+      const { data: { session } } =
+        await supabaseClient.auth.getSession();
+
+      if (!session) {
+        window.location.href = "admin.html";
+      }
+    }
+
+    async function sair() {
+
+      await supabaseClient.auth.signOut();
+
+      window.location.href = "admin.html";
+    }
+
+    verificarLogin();
+
+  </script>
+
+</body>
+</html>
