@@ -117,7 +117,14 @@
 
     section {
       padding: 70px 6%;
-    }
+      .estoque-bg {
+  position: relative;
+  background:
+    linear-gradient(rgba(0,0,0,.82), rgba(0,0,0,.82)),
+    url("lojabrikbom.jpg") center/cover;
+  color: white;
+}
+    
 
     .section-title {
       text-align: center;
@@ -137,7 +144,9 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 25px;
-    }
+      position: relative;
+  z-index: 1;
+}
 
     .car-card {
       background: white;
@@ -395,7 +404,7 @@
   </div>
 </section>
 
-<section id="estoque">
+<section id="estoque" class="estoque-bg">
   <div class="section-title">
     <h2>Veículos em destaque</h2>
     <p>Confira alguns dos nossos veículos.</p>
