@@ -233,6 +233,7 @@
   const fotos = [];
 
   for (let i = 0; i < arquivos.length; i++) {
+    mensagem.textContent = "📸 Enviando foto " + (i + 1) + " de " + arquivos.length + "...";
 
     const arquivo = arquivos[i];
 
