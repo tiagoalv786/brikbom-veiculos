@@ -289,6 +289,23 @@
   position: relative;
   z-index: 2;
 }
+  .car-card .gallery {
+  background: #111;
+  position: relative;
+}
+
+.car-card .gallery::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--gallery-bg);
+  background-size: cover;
+  background-position: center;
+  filter: blur(18px);
+  transform: scale(1.12);
+  opacity: 0.7;
+  z-index: 1;
+}
 
 
 .gallery-btn {
@@ -542,6 +559,8 @@
 
     function showImage(index) {
       current = (index + images.length) % images.length;
+      const imageUrl = images[current].src;
+gallery.style.setProperty('--gallery-bg', `url("${imageUrl}")`);
 
       images.forEach((img, i) => {
         img.style.display = i === current ? 'block' : 'none';
