@@ -252,6 +252,7 @@ const fotos = [];
       mensagem.textContent = "❌ Erro ao enviar a foto: " + uploadError.message;
       return;
     }
+    mensagem.textContent = "✅ Foto enviada! Preparando cadastro...";
 
     const { data: urlData } =
       supabaseClient.storage
