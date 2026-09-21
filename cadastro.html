@@ -243,10 +243,25 @@ const fotos = [];
 
     const caminho = "veiculos/" + nomeArquivo;
 
-    const { error: uploadError } =
-      await supabaseClient.storage
-        .from("carros")
-        .upload(caminho, arquivo);
+    const uploadPromise = supabaseClient.storage
+  .from("carros")
+  .upload(caminho, arquivo);
+
+const timeoutPromise = new Promise((_, reject) =>
+  setTimeout(() => reject(new Error("Tempo limite de 20 segundos atingido no upload.")), 20000)
+);
+
+let uploadResult;
+
+try {
+  uploadResult = await Promise.race([uploadPromise, timeoutPromise]);
+} catch (erroUpload) {
+  mensagem.textContent = "❌ O upload ficou travado: " + erroUpload.message;
+  console.error("ERRO NO UPLOAD:", erroUpload);
+  return;
+}
+
+const uploadError = uploadResult.error;
 
     if (uploadError) {
       mensagem.textContent = "❌ Erro ao enviar a foto: " + uploadError.message;
