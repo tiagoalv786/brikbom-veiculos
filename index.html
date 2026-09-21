@@ -695,61 +695,146 @@ async function carregarVeiculos() {
 
   container.innerHTML = "";
 
-  veiculos.forEach(veiculo => {
-    const card = document.createElement("div");
-    card.className = "car-card";
+veiculos.forEach(veiculo => {
+  const card = document.createElement("div");
+  card.className = "car-card";
 
-    let fotos = [];
+  let fotos = [];
 
-    try {
-      fotos = JSON.parse(veiculo.fotos || "[]");
-    } catch {
-      fotos = [];
-    }
+  try {
+    fotos = JSON.parse(veiculo.fotos || "[]");
+  } catch {
+    fotos = [];
+  }
 
-    if (fotos.length === 0 && veiculo.foto_principal) {
-      fotos = [veiculo.foto_principal];
-    }
+  if (fotos.length === 0 && veiculo.foto_principal) {
+    fotos = [veiculo.foto_principal];
+  }
 
-    const imagem = fotos[0] || veiculo.foto_principal || "";
+  const whatsapp = veiculo.whatsapp || "5545998011079";
 
-    const whatsapp = veiculo.whatsapp || "5545998011079";
+  const mensagem = encodeURIComponent(
+    "Olá! Tenho interesse no " + veiculo.modelo + "."
+  );
 
-    const mensagem = encodeURIComponent(
-      "Olá! Tenho interesse no " + veiculo.modelo + "."
-    );
+  let galeria = "";
 
-    card.innerHTML = `
-      <img src="${imagem}" alt="${veiculo.modelo}">
+  if (fotos.length > 1) {
+    galeria = `
+      <div class="gallery">
 
-      <div class="car-info">
-        <h3>${veiculo.modelo}</h3>
+        <button class="gallery-btn prev" type="button">❮</button>
 
-        <p>🚗 Ano: ${veiculo.ano}</p>
-        <p>📏 KM: ${Number(veiculo.km).toLocaleString("pt-BR")}</p>
-        <p>⚙️ Câmbio: ${veiculo.cambio}</p>
-        <p>📍 Cascavel - PR</p>
+        ${fotos.map((foto, i) => `
+          <img
+            src="${foto}"
+            alt="${veiculo.modelo}"
+            style="display:${i === 0 ? "block" : "none"};"
+          >
+        `).join("")}
 
-        <div class="price">
-          R$ ${Number(veiculo.preço).toLocaleString("pt-BR", {
-            minimumFractionDigits: 2
-          })}
+        <div class="gallery-dots">
+          ${fotos.map((_, i) => `
+            <span class="dot ${i === 0 ? "active" : ""}"></span>
+          `).join("")}
         </div>
 
-        <a class="btn btn-red"
-           href="https://wa.me/${whatsapp}?text=${mensagem}"
-           target="_blank">
-          Tenho interesse
-        </a>
+        <button class="gallery-btn next" type="button">❯</button>
+
       </div>
     `;
+  } else {
+    galeria = `
+      <img src="${fotos[0] || ""}" alt="${veiculo.modelo}">
+    `;
+  }
 
-    container.appendChild(card);
-  });
-}
+  card.innerHTML = `
+    ${galeria}
+
+    <div class="car-info">
+
+      <h3>${veiculo.modelo}</h3>
+
+      <p>🚗 Ano: ${veiculo.ano}</p>
+
+      <p>📏 KM: ${Number(veiculo.km).toLocaleString("pt-BR")}</p>
+
+      <p>⚙️ Câmbio: ${veiculo.cambio}</p>
+
+      <p>📍 Cascavel - PR</p>
+
+      <div class="price">
+        R$ ${Number(veiculo.preço).toLocaleString("pt-BR", {
+          minimumFractionDigits: 2
+        })}
+      </div>
+
+      <a class="btn btn-red"
+         href="https://wa.me/${whatsapp}?text=${mensagem}"
+         target="_blank">
+        Tenho interesse
+      </a>
+
+    </div>
+  `;
+
+  container.appendChild(card);
+
+  // Galeria das fotos do veículo
+  if (fotos.length > 1) {
+
+    const gallery = card.querySelector(".gallery");
+    const images = gallery.querySelectorAll("img");
+    const dots = gallery.querySelectorAll(".dot");
+
+    let current = 0;
+
+    function showImage(index) {
+
+      current = (index + images.length) % images.length;
+
+      const imageUrl = images[current].src;
+
+      gallery.style.setProperty(
+        "--gallery-bg",
+        `url("${imageUrl}")`
+      );
+
+      images.forEach((img, i) => {
+        img.style.display = i === current ? "block" : "none";
+      });
+
+      dots.forEach((dot, i) => {
+        dot.classList.toggle(
+          "active",
+          i === current
+        );
+      });
+    }
+
+    gallery.querySelector(".prev").addEventListener(
+      "click",
+      () => showImage(current - 1)
+    );
+
+    gallery.querySelector(".next").addEventListener(
+      "click",
+      () => showImage(current + 1)
+    );
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener(
+        "click",
+        () => showImage(i)
+      );
+    });
+
+    showImage(0);
+  }
+});
 
 carregarVeiculos();
-  });
    
 </script>
     });
