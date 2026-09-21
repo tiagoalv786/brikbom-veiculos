@@ -282,13 +282,13 @@ const uploadError = uploadResult.error;
 const { data: veiculoSalvo, error: erroBanco } =
   await supabaseClient
     .from("veiculos")
-    .insert({
+      .insert({
       modelo: modelo,
       ano: ano,
       km: km,
       cambio: cambio,
-      preco: preco,
-      descricao: descricao,
+      "preço": preco,
+      "descrição": descricao,
       foto_principal: fotos[0],
       fotos: JSON.stringify(fotos),
       whatsapp: whatsapp,
