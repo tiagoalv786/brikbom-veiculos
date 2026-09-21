@@ -634,46 +634,11 @@
   ☎
 </a>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
- <script>
-  document.querySelectorAll('.gallery').forEach(gallery => {
-    const images = gallery.querySelectorAll('img');
-    const dots = gallery.querySelectorAll('.dot');
-    let current = 0;
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    function showImage(index) {
-      current = (index + images.length) % images.length;
-      const imageUrl = images[current].src;
-gallery.style.setProperty('--gallery-bg', `url("${imageUrl}")`);
-
-      images.forEach((img, i) => {
-        img.style.display = i === current ? 'block' : 'none';
-      });
-
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === current);
-      });
-    }
-
-    gallery.querySelector('.prev').addEventListener('click', () => {
-      showImage(current - 1);
-    });
-
-    gallery.querySelector('.next').addEventListener('click', () => {
-      showImage(current + 1);
-    });
-
-    dots.forEach((dot, i) => {
-      dot.addEventListener('click', () => {
-      showImage(i);
-      });
-    });
-
-    showImage(0);
-  });
-    const SUPABASE_URL = "https://rkpkmtmsjmrjoyaxtlkd.supabase.co";
+<script>
+const SUPABASE_URL = "https://rkpkmtmsjmrjoyaxtlkd.supabase.co";
 const SUPABASE_KEY = "sb_publishable_6hbcaoW8PjXW1ExL6mB3MQ_hPho6Mi5";
-
 
 const supabaseClient = supabase.createClient(
   SUPABASE_URL,
@@ -681,158 +646,292 @@ const supabaseClient = supabase.createClient(
 );
 
 
-async function carregarVeiculos() {
-  const container = document.getElementById("veiculos-dinamicos");
+/* GALERIAS */
+function iniciarGaleria(gallery) {
 
-  const { data: veiculos, error } = await supabaseClient
-    .from("veiculos")
-    .select("*")
-    .eq("disponivel", true)
-    .order("id", { ascending: false });
+  const images = gallery.querySelectorAll("img");
+  const dots = gallery.querySelectorAll(".dot");
+
+  if (images.length === 0) return;
+
+  let current = 0;
+
+  function showImage(index) {
+
+    current = (index + images.length) % images.length;
+
+    const imageUrl = images[current].src;
+
+    gallery.style.setProperty(
+      "--gallery-bg",
+      `url("${imageUrl}")`
+    );
+
+    images.forEach((img, i) => {
+      img.style.display =
+        i === current ? "block" : "none";
+    });
+
+    dots.forEach((dot, i) => {
+      dot.classList.toggle(
+        "active",
+        i === current
+      );
+    });
+  }
+
+  const prev = gallery.querySelector(".prev");
+  const next = gallery.querySelector(".next");
+
+  if (prev) {
+    prev.addEventListener(
+      "click",
+      () => showImage(current - 1)
+    );
+  }
+
+  if (next) {
+    next.addEventListener(
+      "click",
+      () => showImage(current + 1)
+    );
+  }
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener(
+      "click",
+      () => showImage(i)
+    );
+  });
+
+  showImage(0);
+}
+
+
+/* GALERIAS QUE JÁ EXISTEM NO HTML */
+document.querySelectorAll(".gallery").forEach(
+  iniciarGaleria
+);
+
+
+/* CARREGAR VEÍCULOS DO SUPABASE */
+async function carregarVeiculos() {
+
+  const container =
+    document.getElementById("veiculos-dinamicos");
+
+  const { data: veiculos, error } =
+    await supabaseClient
+      .from("veiculos")
+      .select("*")
+      .eq("disponivel", true)
+      .order("id", { ascending: false });
 
   if (error) {
-    console.error("Erro ao carregar veículos:", error);
+
+    console.error(
+      "Erro ao carregar veículos:",
+      error
+    );
+
     return;
   }
 
   container.innerHTML = "";
 
+
   veiculos.forEach(veiculo => {
-    const card = document.createElement("div");
+
+    const card =
+      document.createElement("div");
+
     card.className = "car-card";
+
+
+    /* FOTOS */
 
     let fotos = [];
 
     try {
-      fotos = JSON.parse(veiculo.fotos || "[]");
+
+      fotos =
+        JSON.parse(
+          veiculo.fotos || "[]"
+        );
+
     } catch {
+
       fotos = [];
+
     }
 
-    if (fotos.length === 0 && veiculo.foto_principal) {
-      fotos = [veiculo.foto_principal];
+
+    if (
+      fotos.length === 0 &&
+      veiculo.foto_principal
+    ) {
+
+      fotos = [
+        veiculo.foto_principal
+      ];
+
     }
 
-    const whatsapp = veiculo.whatsapp || "5545998011079";
 
-    const mensagem = encodeURIComponent(
-      "Olá! Tenho interesse no " + veiculo.modelo + "."
-    );
+    /* WHATSAPP */
+
+    const whatsapp =
+      veiculo.whatsapp ||
+      "5545998011079";
+
+
+    const mensagem =
+      encodeURIComponent(
+        "Olá! Tenho interesse no " +
+        veiculo.modelo +
+        "."
+      );
+
+
+    /* GALERIA */
 
     let galeria = "";
 
+
     if (fotos.length > 1) {
+
       galeria = `
         <div class="gallery">
 
-          <button class="gallery-btn prev" type="button">❮</button>
+          <button
+            class="gallery-btn prev"
+            type="button">
+            ❮
+          </button>
 
           ${fotos.map((foto, i) => `
             <img
               src="${foto}"
               alt="${veiculo.modelo}"
-              style="display:${i === 0 ? "block" : "none"};"
-            >
+              style="display:${
+                i === 0
+                  ? "block"
+                  : "none"
+              };">
           `).join("")}
 
           <div class="gallery-dots">
+
             ${fotos.map((_, i) => `
-              <span class="dot ${i === 0 ? "active" : ""}"></span>
+              <span
+                class="dot ${
+                  i === 0
+                    ? "active"
+                    : ""
+                }">
+              </span>
             `).join("")}
+
           </div>
 
-          <button class="gallery-btn next" type="button">❯</button>
+          <button
+            class="gallery-btn next"
+            type="button">
+            ❯
+          </button>
 
         </div>
       `;
+
     } else {
+
       galeria = `
-        <img src="${fotos[0] || ""}" alt="${veiculo.modelo}">
+        <img
+          src="${fotos[0] || ""}"
+          alt="${veiculo.modelo}">
       `;
+
     }
 
+
+    /* CARD */
+
     card.innerHTML = `
+
       ${galeria}
 
       <div class="car-info">
 
-        <h3>${veiculo.modelo}</h3>
+        <h3>
+          ${veiculo.modelo}
+        </h3>
 
-        <p>🚗 Ano: ${veiculo.ano}</p>
+        <p>
+          🚗 Ano: ${veiculo.ano}
+        </p>
 
-        <p>📏 KM: ${Number(veiculo.km).toLocaleString("pt-BR")}</p>
+        <p>
+          📏 KM:
+          ${Number(veiculo.km)
+            .toLocaleString("pt-BR")}
+        </p>
 
-        <p>⚙️ Câmbio: ${veiculo.cambio}</p>
+        <p>
+          ⚙️ Câmbio:
+          ${veiculo.cambio}
+        </p>
 
-        <p>📍 Cascavel - PR</p>
+        <p>
+          📍 Cascavel - PR
+        </p>
 
         <div class="price">
-          R$ ${Number(veiculo.preço).toLocaleString("pt-BR", {
-            minimumFractionDigits: 2
-          })}
+
+          R$
+          ${Number(veiculo.preço)
+            .toLocaleString(
+              "pt-BR",
+              {
+                minimumFractionDigits: 2
+              }
+            )}
+
         </div>
 
-        <a class="btn btn-red"
-           href="https://wa.me/${whatsapp}?text=${mensagem}"
-           target="_blank">
+        <a
+          class="btn btn-red"
+          href="https://wa.me/${whatsapp}?text=${mensagem}"
+          target="_blank">
+
           Tenho interesse
+
         </a>
 
       </div>
     `;
 
+
     container.appendChild(card);
+
+
+    /* INICIAR GALERIA DO NOVO CARRO */
 
     if (fotos.length > 1) {
 
-      const gallery = card.querySelector(".gallery");
-      const images = gallery.querySelectorAll("img");
-      const dots = gallery.querySelectorAll(".dot");
-
-      let current = 0;
-
-      function showImage(index) {
-        current = (index + images.length) % images.length;
-
-        const imageUrl = images[current].src;
-
-        gallery.style.setProperty(
-          "--gallery-bg",
-          `url("${imageUrl}")`
-        );
-
-        images.forEach((img, i) => {
-          img.style.display = i === current ? "block" : "none";
-        });
-
-        dots.forEach((dot, i) => {
-          dot.classList.toggle("active", i === current);
-        });
-      }
-
-      gallery.querySelector(".prev").addEventListener(
-        "click",
-        () => showImage(current - 1)
+      iniciarGaleria(
+        card.querySelector(".gallery")
       );
 
-      gallery.querySelector(".next").addEventListener(
-        "click",
-        () => showImage(current + 1)
-      );
-
-      dots.forEach((dot, i) => {
-        dot.addEventListener(
-          "click",
-          () => showImage(i)
-        );
-      });
-
-      showImage(0);
     }
+
   });
+
 }
 
+
 carregarVeiculos();
+
 </script>
+
 </body>
 </html>
