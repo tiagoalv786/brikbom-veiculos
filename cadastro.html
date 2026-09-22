@@ -6,6 +6,42 @@
   <title>Cadastro de Veículos | Brik Bom</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  .veiculo-admin {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  margin-top: 12px;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+.veiculo-admin strong {
+  font-size: 18px;
+}
+
+.dados-veiculo {
+  margin-top: 5px;
+  color: #666;
+}
+
+.btn-excluir {
+  background: #d60000;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-excluir:hover {
+  background: #a80000;
+}
+
+</style>
 
   <style>
     * {
@@ -336,22 +372,25 @@ mensagem.textContent = "✅ Veículo cadastrado com sucesso!";
     return;
   }
 
-  lista.innerHTML = "";
+ item.innerHTML = `
+  <div class="veiculo-admin">
 
-  veiculos.forEach(veiculo => {
-
-    const item = document.createElement("div");
-
-    item.innerHTML = `
+    <div>
       <strong>${veiculo.modelo}</strong>
-      <br>
-      ${veiculo.ano} • ${Number(veiculo.km).toLocaleString("pt-BR")} km
-      <br><br>
-      <button type="button" onclick="excluirVeiculo(${veiculo.id})">
-        🗑️ Excluir veículo
-      </button>
-      <hr>
-    `;
+      <div class="dados-veiculo">
+        ${veiculo.ano} • ${Number(veiculo.km).toLocaleString("pt-BR")} km
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="btn-excluir"
+      onclick="excluirVeiculo(${veiculo.id})">
+      🗑️ Excluir
+    </button>
+
+  </div>
+`;
 
     lista.appendChild(item);
 
