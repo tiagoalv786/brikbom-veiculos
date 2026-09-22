@@ -332,10 +332,15 @@ async function carregarVeiculosAdmin() {
       .order("id", { ascending: false });
 
   if (error) {
-    console.error("Erro ao carregar veículos:", error);
-    lista.innerHTML = "❌ Erro ao carregar veículos.";
-    return;
-  }
+  console.error("Erro ao carregar veículos:", error);
+  lista.innerHTML = "❌ ERRO: " + error.message;
+  return;
+}
+
+if (!veiculos || veiculos.length === 0) {
+  lista.innerHTML = "🚗 Nenhum veículo cadastrado.";
+  return;
+}
 
   lista.innerHTML = "";
 
