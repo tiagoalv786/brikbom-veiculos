@@ -169,11 +169,15 @@
   display: contents;
 }
 
-    .car-card {
-  background: white;
-  border-radius: 12px;
-  overflow: visible !important;
-  box-shadow: 0 5px 20px rgba(0,0,0,.08);
+   .cars {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  align-items: start;
+  grid-auto-rows: auto;
 }
     .nivus-card {
   grid-column: span 1;
