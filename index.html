@@ -865,52 +865,55 @@ async function carregarVeiculos() {
 
     /* CARD */
 
-    card.innerHTML = `
+ card.innerHTML = `
 
-      ${galeria}
+  ${galeria}
 
-      <div class="car-info">
+  <div class="car-info">
 
-        <h3>
-  ${veiculo.modelo}
-</h3>
+    <h3>
+      ${veiculo.modelo}
+    </h3>
 
-        <p>
-          🚗 Ano: ${veiculo.ano}
-        </p>
+    <p>
+      🚗 Ano: ${veiculo.ano}
+    </p>
 
-        <p>
-          📏 KM:
-          ${Number(veiculo.km)
-            .toLocaleString("pt-BR")}
-        </p>
+    <p>
+      📏 KM:
+      ${Number(veiculo.km)
+        .toLocaleString("pt-BR")}
+    </p>
 
-        <p>
-          ⚙️ Câmbio:
-          ${veiculo.cambio}
-        </p>
+    <p>
+      ⚙️ Câmbio:
+      ${veiculo.cambio}
+    </p>
 
-        <p>
-          📍 Cascavel - PR
-        </p>
+    <p>
+      📍 Cascavel - PR
+    </p>
 
-        <div class="price">
+    <div class="price">
+      R$ ${Number(veiculo.preço).toLocaleString(
+        "pt-BR",
+        {
+          minimumFractionDigits: 2
+        }
+      )}
+    </div>
 
-  TESTE PREÇO: ${veiculo.preço}
-  
-</div>
+    <a
+      class="btn btn-red"
+      href="https://wa.me/${whatsapp}?text=${mensagem}"
+      target="_blank">
 
-<a
-          class="btn btn-red"
-          href="https://wa.me/${whatsapp}?text=${mensagem}"
-          target="_blank">
+      Tenho interesse
 
-          Tenho interesse
+    </a>
 
-        </a>
-
-      </div>
-    `;
+  </div>
+`;
 
 
     container.appendChild(card);
