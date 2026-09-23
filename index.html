@@ -747,9 +747,9 @@ async function carregarVeiculos() {
   }
 
   container.innerHTML = "";
+  console.log("VEÍCULOS RECEBIDOS:", veiculos);
 
-
-  veiculos.forEach(veiculo => {
+ veiculos.forEach(veiculo => {
 
     const card =
       document.createElement("div");
