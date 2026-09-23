@@ -906,8 +906,10 @@ async function carregarVeiculos() {
       📍 Cascavel - PR
     </p>
 
-  <div style="display:block !important; color:red !important; background:yellow !important; font-size:30px !important; padding:20px !important;">
-  TESTE PREÇO
+  <div class="price">
+  R$ ${Number(veiculo.preço).toLocaleString("pt-BR", {
+    minimumFractionDigits: 2
+  })}
 </div>
     <a
       class="btn btn-red"
