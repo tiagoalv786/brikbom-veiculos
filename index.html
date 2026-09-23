@@ -744,7 +744,10 @@ async function carregarVeiculos() {
   container.innerHTML = "";
   
   console.log("VEÍCULOS RECEBIDOS:", veiculos);
-  console.log("PREÇOS:", veiculos.map(v => v.preço));
+  console.log("PREÇOS:", veiculos.map(v => ({
+  modelo: v.modelo,
+  preco: v.preço
+})));
 
  veiculos.forEach(veiculo => {
 
