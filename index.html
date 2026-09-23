@@ -747,7 +747,7 @@ async function carregarVeiculos() {
   }
 
   container.innerHTML = "";
-  alert(JSON.stringify(veiculos, null, 2));
+  alert(veiculos.map(v => v.modelo + " | PREÇO: " + v.preço).join("\n"));
   console.log("VEÍCULOS RECEBIDOS:", veiculos);
 
  veiculos.forEach(veiculo => {
